@@ -23,7 +23,7 @@ A simple web application that generates learning roadmaps in a tree structure ba
    ```
 2. Navigate to the project directory:
    ```bash
-   cd learning-roadmap
+   cd roadmap-generator
    ```
 3. Open `index.html` in your web browser.
 
