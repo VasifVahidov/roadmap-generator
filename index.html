@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Roadmap</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212; /* Nice black background */
+            color: white;
+            text-align: center;
+        }
+        .search-container {
+            margin-top: 100px; /* Space from the top */
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6200ea; /* Purple button */
+            color: white;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        button:hover {
+            background-color: #3700b3; /* Darker purple on hover */
+        }
+        #roadmap {
+            margin-top: 50px;
+            display: none; /* Hidden until search */
+            text-align: left; /* Align text to left for better readability */
+            padding: 0 20%;
+        }
+        .tree {
+            margin: 20px auto;
+            padding: 0;
+            list-style: none; /* Remove default bullets */
+        }
+        .tree ul {
+            margin-left: 20px; /* Indentation for child nodes */
+            padding-left: 20px; /* Space between tree branches */
+            border-left: 2px solid #6200ea; /* Vertical line for tree structure */
+            display: none; /* Hide child lists initially */
+        }
+        .tree li {
+            position: relative;
+            padding: 10px 0;
+            cursor: pointer; /* Change cursor for expandability */
+            transition: background 0.3s;
+        }
+        .tree li:hover {
+            background: rgba(255, 255, 255, 0.1); /* Highlight on hover */
+        }
+        .loading {
+            display: none; /* Hidden until loading */
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h1>Search for Your Learning Roadmap</h1>
+        <input type="text" id="searchInput" placeholder="e.g. AWS Cloud Practitioner">
+        <button onclick="showRoadmap()">Search</button>
+        <div id="loading" class="loading">Loading...</div>
+    </div>
+
+    <div id="roadmap">
+        <h2>Roadmap for <span id="searchTerm"></span></h2>
+        <div id="treeStructure" class="tree">
+            <p>Loading roadmap...</p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchRoadmap(searchTerm) {
+            const response = await fetch('http://localhost:3000/api/fetch-roadmap', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ searchTerm })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            return data; // Expecting the tree structure as text
+        }
+
+        async function showRoadmap() {
+            const searchTerm = document.getElementById("searchInput").value;
+            document.getElementById("searchTerm").innerText = searchTerm;
+            document.getElementById("loading").style.display = "block"; // Show loading indicator
+
+            try {
+                const roadmapData = await fetchRoadmap(searchTerm);
+                document.getElementById("treeStructure").innerHTML = roadmapData; // Update with API response
+
+                // Show the roadmap section
+                document.getElementById("roadmap").style.display = "block";
+            } catch (error) {
+                console.error('Error fetching roadmap:', error);
+                document.getElementById("treeStructure").innerHTML = '<p>Error fetching roadmap data.</p>';
+            } finally {
+                document.getElementById("loading").style.display = "none"; // Hide loading indicator
+            }
+        }
+
+        function toggle(li) {
+            const childUl = li.querySelector("ul");
+            if (childUl) {
+                childUl.style.display = childUl.style.display === "none" || childUl.style.display === "" ? "block" : "none";
+            }
+        }
+    </script>    
+</body>
+</html>
