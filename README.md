@@ -1,4 +1,3 @@
-```markdown
 # Roadmap Generator
 
 A simple web application that generates learning roadmaps in a tree structure based on user input. This project leverages the OpenAI API to provide tailored content for various topics, helping users effectively navigate their learning journey.
@@ -20,7 +19,7 @@ A simple web application that generates learning roadmaps in a tree structure ba
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YOUR_GITHUB_USERNAME/learning-roadmap.git
+   git clone https://github.com/VasifVahidov/roadmap-generator.git
    ```
 2. Navigate to the project directory:
    ```bash
